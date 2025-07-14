@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inventory Helper by hostad</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="main">
+    <h1>Inventory Helper</h1>
+
+    <h3>Добавь ID игрока:</h3>
+    <input type="text" id="playerIdInput" placeholder="ID игрока" />
+    <button onclick="addPlayer()">Добавить</button>
+    <button onclick="clearPlayers()">Очистить</button>
+
+    <div id="errorBox"></div>
+    <div class="id-list" id="idList"></div>
+
+    <h3>Скины:</h3>
+    <input type="text" id="skin1" placeholder="Skin 1 (обязателен)" />
+    <input type="text" id="skin2" placeholder="Skin 2 (опционально)" />
+
+    <h3>Оружие:</h3>
+    <input type="text" id="weaponId" placeholder="ID оружия" />
+    <input type="number" id="ammo" placeholder="Кол-во патронов (макс 2000)" min="0" max="2000" />
+
+    <br /><br />
+    <button onclick="generateCommands()">Готово</button>
+    <button id="resetBtn" onclick="resetCommands()">Сбросить всё</button>
+
+    <div class="commands" id="commandOutput"></div>
+
+    <footer>helper создан by <strong>hostad</strong></footer>
+  </div>
+
+  <div class="sidebar">
+    <a href="https://docs.google.com/document/d/1W-apYrd3CoxvvTFG0JtjxHzokvz7G-yiT7Ugm90CSYU/edit?tab=t.0" target="_blank" class="link-button">Скины</a>
+    <a href="https://docs.google.com/document/d/1NtxXMPbnQFeX6obx3SW9o32R3F-qA_vnTQ5D-twF3Rc/edit?tab=t.0" target="_blank" class="link-button">Оружие</a>
+    <a href="https://docs.google.com/document/d/1b0grfk0dt3p4EFP_C2xWcX5mUwCMJpuH1bCrHeEk1JU/edit?tab=t.0" target="_blank" class="link-button">Авто</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

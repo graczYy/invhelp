@@ -1,0 +1,181 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: #f0f0f0;
+  margin: 0;
+  padding: 2.5rem;
+  display: flex;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.main {
+  flex: 1;
+  min-width: 320px;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin: 0 0 0.5rem 0;
+  color: #4caf50;
+}
+
+h3 {
+  margin: 1.75rem 0 0.5rem 0;
+  color: #ccc;
+  font-size: 1.1rem;
+}
+
+input,
+button {
+  background: #1e1e1e;
+  color: #fff;
+  border: 1px solid #333;
+  padding: 0.625rem 0.75rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin: 0.3rem 0.5rem 0.3rem 0;
+}
+
+input:focus {
+  border-color: #4caf50;
+  outline: 0;
+}
+
+button {
+  background: #4caf50;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+.id-list span {
+  background: #222;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  margin: 0.2rem;
+  display: inline-block;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.id-list span:hover {
+  background: #3a0000;
+}
+
+.commands {
+  margin-top: 1rem;
+}
+
+.command-line {
+  background: #1c1c1c;
+  padding: 0.6rem 0.75rem;
+  margin: 0.3rem 0;
+  border: 1px solid #2e2e2e;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.5s;
+}
+
+.command-line:hover {
+  background: #333;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.error {
+  background: rgba(255, 76, 76, 0.1);
+  color: #ff4c4c;
+  border-left: 4px solid #ff4c4c;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.done-text {
+  color: #4caf50;
+  font-size: 1rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  animation: fadeIn 0.3s ease;
+}
+
+footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  color: #777;
+  font-size: 0.875rem;
+}
+
+.sidebar {
+  width: 220px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.link-button {
+  background: #222;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  border: 1px solid #444;
+  padding: 0.75rem;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.link-button:hover {
+  background: #333;
+}
+
+#resetBtn {
+  display: none;
+  margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  body {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .sidebar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+}
