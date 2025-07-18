@@ -2,46 +2,53 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Inventory Helper by hostad</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Helper by Hostad</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container">
+    <div class="header">
+      <h1>Inventory Helper <span>by Hostad</span></h1>
+      <button id="themeToggle">🌓</button>
+    </div>
 
-  <div class="main">
-    <h1>Inventory Helper</h1>
+    <div class="presets">
+      <h3>Пресеты</h3>
+      <button onclick="applyPreset('cs')">CS</button>
+      <button onclick="applyPreset('ffa')">Каждый сам за себя</button>
+      <button onclick="applyPreset('bity')">Биты</button>
+    </div>
 
-    <h3>Добавь ID игрока:</h3>
-    <input type="text" id="playerIdInput" placeholder="ID игрока" />
-    <button onclick="addPlayer()">Добавить</button>
-    <button onclick="clearPlayers()">Очистить</button>
+    <div class="input-section">
+      <textarea id="playerInput" placeholder="Вставь ID игроков построчно..."></textarea>
+      <div id="idError" class="error"></div>
+      <input type="number" id="skin1" placeholder="Скин 1" />
+      <input type="number" id="skin2" placeholder="Скин 2 (необязательно)" />
+      <input type="number" id="weaponId" placeholder="ID оружия" />
+      <input type="number" id="ammo" placeholder="Патроны (макс 2000)" />
+      <input type="number" id="hp" placeholder="HP (0–150)" />
+      <input type="number" id="armor" placeholder="Броня (0–320)" />
 
-    <div id="errorBox"></div>
-    <div class="id-list" id="idList"></div>
+      <label class="checkbox-container">
+        <input type="checkbox" id="tpCheckbox" />
+        <span class="checkmark"></span> ТП
+      </label>
 
-    <h3>Скины:</h3>
-    <input type="text" id="skin1" placeholder="Skin 1 (обязателен)" />
-    <input type="text" id="skin2" placeholder="Skin 2 (опционально)" />
+      <button onclick="generateCommands()">Создать команды</button>
+    </div>
 
-    <h3>Оружие:</h3>
-    <input type="text" id="weaponId" placeholder="ID оружия" />
-    <input type="number" id="ammo" placeholder="Кол-во патронов (макс 2000)" min="0" max="2000" />
+    <div class="commands-output" id="output"></div>
+    <div class="reset-container">
+      <button onclick="resetAll()" id="resetBtn" style="display:none;">Сбросить всё</button>
+    </div>
 
-    <br /><br />
-    <button onclick="generateCommands()">Готово</button>
-    <button id="resetBtn" onclick="resetCommands()">Сбросить всё</button>
-
-    <div class="commands" id="commandOutput"></div>
-
-    <footer>helper создан by <strong>hostad</strong></footer>
+    <div class="links">
+      <a href="https://docs.google.com/document/d/1W-apYrd3CoxvvTFG0JtjxHzokvz7G-yiT7Ugm90CSYU" target="_blank">📄 Скины</a>
+      <a href="https://docs.google.com/document/d/1NtxXMPbnQFeX6obx3SW9o32R3F-qA_vnTQ5D-twF3Rc" target="_blank">🔫 Оружие</a>
+      <a href="https://docs.google.com/document/d/1b0grfk0dt3p4EFP_C2xWcX5mUwCMJpuH1bCrHeEk1JU" target="_blank">🚗 Авто</a>
+    </div>
   </div>
-
-  <div class="sidebar">
-    <a href="https://docs.google.com/document/d/1W-apYrd3CoxvvTFG0JtjxHzokvz7G-yiT7Ugm90CSYU/edit?tab=t.0" target="_blank" class="link-button">Скины</a>
-    <a href="https://docs.google.com/document/d/1NtxXMPbnQFeX6obx3SW9o32R3F-qA_vnTQ5D-twF3Rc/edit?tab=t.0" target="_blank" class="link-button">Оружие</a>
-    <a href="https://docs.google.com/document/d/1b0grfk0dt3p4EFP_C2xWcX5mUwCMJpuH1bCrHeEk1JU/edit?tab=t.0" target="_blank" class="link-button">Авто</a>
-  </div>
-
   <script src="script.js"></script>
 </body>
 </html>
