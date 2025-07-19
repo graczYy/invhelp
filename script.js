@@ -1,323 +1,265 @@
-const css = `
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial;
+const bannedGuns = [7,8,12,11,16,17,18,35,36,37,39,40,42,44];
+
+let playerIds = [];
+
+const idList = document.getElementById('idList');
+const commandOutput = document.getElementById('commandOutput');
+const errorBox = document.getElementById('errorBox');
+const resetBtn = document.getElementById('resetBtn');
+const tpCheck = document.getElementById('tpCheck');
+const generateBtn = document.getElementById('generateBtn');
+const fileInput = document.getElementById('fileInput');
+const themeToggleBtn = document.getElementById('themeToggle');
+
+function showError(msg) {
+  errorBox.style.display = 'block';
+  errorBox.textContent = msg;
 }
 
-html, body {
-  height: 100%;
-  background: #0f0f0f;
-  color: #f0f0f0;
-  transition: background 0.3s, color 0.3s;
+function clearError() {
+  errorBox.style.display = 'none';
+  errorBox.textContent = '';
 }
 
-body.light {
-  background: #f9f9f9;
-  color: #222;
+function updateGenerateState() {
+  generateBtn.disabled = playerIds.length === 0;
 }
 
-.container {
-  display: flex;
-  min-height: 100vh;
-  padding: 30px 40px;
-  gap: 30px;
-  box-sizing: border-box;
-}
-
-.main {
-  flex: 1 1 0;
-  max-width: 720px;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  color: #4caf50;
-}
-
-body.light h1 {
-  color: #2e7d32;
-}
-
-h3 {
-  margin-top: 30px;
-  margin-bottom: 10px;
-  font-weight: 600;
-  color: #ccc;
-}
-
-body.light h3 {
-  color: #555;
-}
-
-input[type="text"],
-input[type="number"],
-select {
-  width: 100%;
-  max-width: 320px;
-  padding: 12px 15px;
-  margin: 6px 0 15px 0;
-  border-radius: 8px;
-  border: 1.5px solid #333;
-  background-color: #1e1e1e;
-  color: #eee;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-}
-
-body.light input[type="text"],
-body.light input[type="number"],
-body.light select {
-  background-color: #fff;
-  border-color: #bbb;
-  color: #222;
-}
-
-input:focus {
-  border-color: #4caf50;
-  outline: none;
-}
-
-button {
-  background-color: #4caf50;
-  border: none;
-  color: #fff;
-  padding: 12px 20px;
-  margin: 8px 8px 8px 0;
-  font-size: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.3s ease;
-}
-
-button:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-button:disabled {
-  background-color: #777;
-  cursor: not-allowed;
-}
-
-.id-list {
-  margin-top: 10px;
-  max-width: 320px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.id-list span {
-  background-color: #222;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.25s ease;
-  user-select: none;
-}
-
-body.light .id-list span {
-  background-color: #ddd;
-  color: #222;
-}
-
-.id-list span:hover {
-  background-color: #3a0000;
-  color: #fff;
-}
-
-body.light .id-list span:hover {
-  background-color: #c00;
-  color: #fff;
-}
-
-.commands {
-  margin-top: 20px;
-  max-width: 720px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.command-line {
-  background-color: #1c1c1c;
-  padding: 12px 15px;
-  border-radius: 6px;
-  border: 1px solid #2e2e2e;
-  cursor: pointer;
-  transition: background-color 0.3s ease, opacity 0.4s ease;
-  user-select: none;
-  font-family: calibri;
-  word-break: break-word;
-}
-
-body.light .command-line {
-  background-color: #eee;
-  border-color: #ccc;
-  color: #222;
-}
-
-.command-line:hover {
-  background-color: #333;
-}
-
-body.light .command-line:hover {
-  background-color: #ccc;
-}
-
-.fade-out {
-  opacity: 0 !important;
-  transition: opacity 0.4s ease !important;
-}
-
-#errorBox {
-  margin-top: 10px;
-  max-width: 320px;
-  min-height: 26px;
-  font-weight: 600;
-  color: #ff4c4c;
-  background: rgba(255, 76, 76, 0.1);
-  border-left: 4px solid #ff4c4c;
-  border-radius: 6px;
-  padding: 10px 15px;
-  display: none;
-  user-select: none;
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.done-text {
-  color: #4caf50;
-  font-size: 1.1rem;
-  margin-top: 15px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  user-select: none;
-  animation: fadeIn 0.3s ease forwards;
-}
-
-.sidebar {
-  width: 220px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  user-select: none;
-}
-
-.link-button {
-  background-color: #222;
-  color: #fff;
-  text-align: center;
-  padding: 12px 15px;
-  border-radius: 8px;
-  font-weight: 700;
-  text-decoration: none;
-  border: 1px solid #444;
-  transition: background-color 0.3s ease;
-}
-
-.link-button:hover {
-  background-color: #333;
-}
-
-body.light .link-button {
-  background-color: #eee;
-  color: #222;
-  border-color: #ccc;
-}
-
-body.light .link-button:hover {
-  background-color: #ddd;
-}
-
-#resetBtn {
-  display: none;
-  margin-top: 20px;
-}
-
-.presets {
-  margin-top: 20px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.presets button {
-  flex: 1 1 calc(33% - 12px);
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  user-select: none;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
+function addPlayer() {
+  const input = document.getElementById('playerIdInput');
+  const id = input.value.trim();
+  if (!/^\d+$/.test(id)) {
+    showError('ID должен содержать только цифры');
+    input.value = '';
+    return;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  if (playerIds.includes(id)) {
+    showError('Такой ID уже добавлен');
+    input.value = '';
+    return;
+  }
+  playerIds.push(id);
+  updateIdList();
+  input.value = '';
+  clearError();
+  updateGenerateState();
+}
+
+function updateIdList() {
+  idList.innerHTML = '';
+  playerIds.forEach(id => {
+    const span = document.createElement('span');
+    span.textContent = id;
+    span.title = 'Кликните, чтобы удалить';
+    span.onclick = () => {
+      playerIds = playerIds.filter(x => x !== id);
+      updateIdList();
+      updateGenerateState();
+      clearError();
+    };
+    idList.appendChild(span);
+  });
+}
+
+function clearPlayers() {
+  playerIds = [];
+  updateIdList();
+  resetCommands();
+  clearError();
+  updateGenerateState();
+}
+
+function validateNumber(value, min, max) {
+  if (!value) return null;
+  if (!/^\d+$/.test(value)) return false;
+  const num = parseInt(value, 10);
+  if (num < min || num > max) return false;
+  return num;
+}
+
+function generateCommands() {
+  clearError();
+  commandOutput.innerHTML = '';
+
+  if (playerIds.length === 0) {
+    showError('Добавьте хотя бы одного игрока');
+    return;
+  }
+
+  const skin1 = document.getElementById('skin1').value.trim();
+  const skin2 = document.getElementById('skin2').value.trim();
+  const weaponIdStr = document.getElementById('weaponId').value.trim();
+  const ammoStr = document.getElementById('ammo').value.trim();
+  const hpStr = document.getElementById('health').value.trim();
+  const armorStr = document.getElementById('armor').value.trim();
+
+  if (skin1 && !/^\d+$/.test(skin1)) {
+    showError('Скин 1 должен содержать только цифры');
+    return;
+  }
+  if (skin2 && !/^\d+$/.test(skin2)) {
+    showError('Скин 2 должен содержать только цифры');
+    return;
+  }
+
+  if (weaponIdStr && !/^\d+$/.test(weaponIdStr)) {
+    showError('ID оружия должен быть числом');
+    return;
+  }
+
+  let weaponId = weaponIdStr ? parseInt(weaponIdStr, 10) : null;
+  if (weaponId !== null && bannedGuns.includes(weaponId)) {
+    showError('Выбранное оружие запрещено к выдаче.');
+    return;
+  }
+  if (weaponId === 38) {
+    alert('Внимание: при использовании оружия ID 38 несколькими игроками возможен вылет.');
+  }
+  if (weaponId === 23) {
+    alert('Внимание: у игроков вне силовых структур будет кик античитом при ударе тайзером.');
+  }
+
+  const ammo = validateNumber(ammoStr, 0, 2000);
+  if (ammo === false) {
+    showError('Патроны должны быть числом от 0 до 2000');
+    return;
+  }
+
+  const hp = validateNumber(hpStr, 0, 150);
+  if (hp === false) {
+    showError('HP должно быть числом от 0 до 150');
+    return;
+  }
+
+  const armor = validateNumber(armorStr, 0, 320);
+  if (armor === false) {
+    showError('Броня должна быть числом от 0 до 320');
+    return;
+  }
+
+  const half = Math.ceil(playerIds.length / 2);
+  const commands = [];
+
+  // Все /get <id> идут вначале, если выбран ТП
+  if (tpCheck.checked) {
+    playerIds.forEach(id => commands.push(`/get ${id}`));
+  }
+
+  playerIds.forEach((id, idx) => {
+    if (skin1) {
+      const skin = (skin2 && idx >= half) ? skin2 : skin1;
+      commands.push(`/tempskin ${id} ${skin}`);
+    }
+    if (weaponId !== null && ammo > 0) {
+      commands.push(`/weapongive ${id} ${weaponId} ${ammo}`);
+    }
+    if (hp !== null) {
+      commands.push(`/sethp ${id} ${hp}`);
+    }
+    if (armor !== null) {
+      commands.push(`/setarmor ${id} ${armor}`);
+    }
+  });
+
+  if (commands.length === 0) {
+    showError('Нет данных для генерации команд');
+    return;
+  }
+
+  commands.forEach(addCommand);
+  resetBtn.style.display = 'inline-block';
+}
+
+function addCommand(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  div.className = 'command-line';
+  div.title = 'Клик для копирования и удаления';
+  div.onclick = () => {
+    navigator.clipboard.writeText(text);
+    div.style.transition = 'opacity 0.4s';
+    div.style.opacity = '0';
+    setTimeout(() => {
+      div.remove();
+      if (commandOutput.childElementCount === 0) {
+        commandOutput.innerHTML = '<div class="done-text">Все выдано</div>';
+        resetBtn.style.display = 'none';
+      }
+    }, 400);
+  };
+  commandOutput.appendChild(div);
+}
+
+function resetCommands() {
+  commandOutput.innerHTML = '';
+  resetBtn.style.display = 'none';
+}
+
+function applyPreset(name) {
+  switch (name) {
+    case 'cs':
+      document.getElementById('skin1').value = '43';
+      document.getElementById('skin2').value = '6840';
+      document.getElementById('weaponId').value = '57';
+      document.getElementById('ammo').value = '1000';
+      document.getElementById('health').value = '150';
+      document.getElementById('armor').value = '320';
+      break;
+    case 'ffa':
+      document.getElementById('skin1').value = '45';
+      document.getElementById('skin2').value = '';
+      document.getElementById('weaponId').value = '57';
+      document.getElementById('ammo').value = '1000';
+      document.getElementById('health').value = '150';
+      document.getElementById('armor').value = '320';
+      break;
+    case 'bats':
+      document.getElementById('skin1').value = '107';
+      document.getElementById('skin2').value = '';
+      document.getElementById('weaponId').value = '5';
+      document.getElementById('ammo').value = '1';
+      document.getElementById('health').value = '100';
+      document.getElementById('armor').value = '';
+      break;
+    default:
+      break;
   }
 }
 
-@media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-    padding: 20px;
-  }
-  .sidebar {
-    width: 100%;
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-  }
-  .main {
-    max-width: 100%;
-  }
-  input[type="text"],
-  input[type="number"],
-  select,
-  .id-list {
-    max-width: 100%;
-  }
-  .presets button {
-    flex: 1 1 100%;
-  }
+function toggleTheme() {
+  document.body.classList.toggle('light');
+  document.body.classList.toggle('dark');
+  // Можно добавить сохранение в localStorage, если нужно
 }
 
-.input {
-  width: 100%;
-  max-width: 320px;
-  padding: 12px 15px;
-  margin: 6px 0 15px 0;
-  border-radius: 8px;
-  border: 1.5px solid #333;
-  background-color: #1e1e1e;
-  color: #eee;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+function loadFromFile() {
+  fileInput.click();
 }
 
-body.light .input {
-  background-color: #fff;
-  border-color: #bbb;
-  color: #222;
-}
+fileInput.addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const lines = event.target.result.split(/\r?\n/);
+    lines.forEach(line => {
+      const id = line.trim();
+      if (id && /^\d+$/.test(id) && !playerIds.includes(id)) {
+        playerIds.push(id);
+      }
+    });
+    updateIdList();
+    updateGenerateState();
+  };
+  reader.readAsText(file);
+});
 
-.input:focus {
-  border-color: #4caf50;
-  outline: none;
-}
-
+document.getElementById('addPlayerBtn').onclick = addPlayer;
+document.getElementById('clearPlayersBtn').onclick = clearPlayers;
+document.getElementById('generateBtn').onclick = generateCommands;
+document.getElementById('resetBtn').onclick = resetCommands;
+document.getElementById('loadFileBtn').onclick = loadFromFile;
+document.getElementById('themeToggle').onclick = toggleTheme;
+document.getElementById('presetCS').onclick = () => applyPreset('cs');
+document.getElementById('presetFFA').onclick = () => applyPreset('ffa');
+document.getElementById('presetBats').onclick = () => applyPreset('bats');
