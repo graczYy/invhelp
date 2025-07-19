@@ -2,45 +2,82 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Inventory Helper by hostad</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Генератор команд</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="dark">
 
-  <div class="main">
-    <h1>Inventory Helper</h1>
+  <div class="container">
+    <main class="main">
+      <h1>Генератор команд</h1>
 
-    <h3>Добавь ID игрока:</h3>
-    <input type="text" id="playerIdInput" placeholder="ID игрока" />
-    <button onclick="addPlayer()">Добавить</button>
-    <button onclick="clearPlayers()">Очистить</button>
+      <section class="players-section">
+        <h3>ID игроков</h3>
+        <div class="input-row">
+          <input id="playerIdInput" class="input" placeholder="Введите ID игрока" autocomplete="off" />
+          <button onclick="addPlayer()" class="primary">Добавить</button>
+          <button onclick="clearPlayers()" class="secondary">Очистить</button>
+        </div>
+        <div id="idList" class="id-list"></div>
+      </section>
 
-    <div id="errorBox"></div>
-    <div class="id-list" id="idList"></div>
+      <div id="errorBox" class="error-box" style="display:none;"></div>
 
-    <h3>Скины:</h3>
-    <input type="text" id="skin1" placeholder="Skin 1 (обязателен)" />
-    <input type="text" id="skin2" placeholder="Skin 2 (опционально)" />
+      <section class="inputs-section">
+        <h3>Настройки</h3>
 
-    <h3>Оружие:</h3>
-    <input type="text" id="weaponId" placeholder="ID оружия" />
-    <input type="number" id="ammo" placeholder="Кол-во патронов (макс 2000)" min="0" max="2000" />
+        <label><input type="checkbox" id="tpCheck" /> Добавить команду <code>/get</code> (ТП)</label>
 
-    <br /><br />
-    <button onclick="generateCommands()">Готово</button>
-    <button id="resetBtn" onclick="resetCommands()">Сбросить всё</button>
+        <div class="input-row">
+          <input id="skin1" class="input" placeholder="Скин 1" autocomplete="off" />
+          <input id="skin2" class="input" placeholder="Скин 2 (опционально)" autocomplete="off" />
+        </div>
 
-    <div class="commands" id="commandOutput"></div>
+        <div class="input-row">
+          <input id="weaponId" class="input" placeholder="ID оружия" autocomplete="off" />
+          <input id="ammo" class="input" placeholder="Патроны (0-2000)" autocomplete="off" type="number" min="0" max="2000" />
+        </div>
 
-    <footer>helper создан by <strong>hostad</strong></footer>
+        <div class="input-row">
+          <input id="health" class="input" placeholder="HP (0-150)" autocomplete="off" type="number" min="0" max="150" />
+          <input id="armor" class="input" placeholder="Броня (0-320)" autocomplete="off" type="number" min="0" max="320" />
+        </div>
+
+        <div class="input-row">
+          <select id="presetSelector" class="input" onchange="applyPreset(this.value)">
+            <option value="">Пресеты</option>
+            <option value="cs">CS</option>
+            <option value="ffa">Каждый сам за себя</option>
+            <option value="bats">Биты</option>
+          </select>
+
+          <button onclick="generateCommands()" class="primary">Сгенерировать</button>
+          <button id="resetBtn" onclick="resetCommands()" style="display:none;">Сбросить команды</button>
+        </div>
+
+        <div class="input-row">
+          <button onclick="loadFromFile()" class="secondary">Импорт из .txt</button>
+          <button onclick="toggleTheme()" class="secondary">Переключить тему</button>
+        </div>
+
+        <input type="file" id="fileInput" accept=".txt" style="display:none" />
+      </section>
+
+      <section class="commands-section">
+        <div id="commandOutput" class="commands"></div>
+      </section>
+    </main>
+
+    <aside class="sidebar">
+      <h3>Таблицы</h3>
+      <a href="https://docs.google.com/document/d/1W-apYrd3CoxvvTFG0JtjxHzokvz7G-yiT7Ugm90CSYU/edit?tab=t.0" target="_blank" class="link-button">Скины</a>
+      <a href="https://docs.google.com/document/d/1NtxXMPbnQFeX6obx3SW9o32R3F-qA_vnTQ5D-twF3Rc/edit?tab=t.0" target="_blank" class="link-button">Оружие</a>
+      <a href="https://docs.google.com/document/d/1b0grfk0dt3p4EFP_C2xWcX5mUwCMJpuH1bCrHeEk1JU/edit?tab=t.0" target="_blank" class="link-button">Авто</a>
+    </aside>
   </div>
 
-  <div class="sidebar">
-    <a href="https://docs.google.com/document/d/1W-apYrd3CoxvvTFG0JtjxHzokvz7G-yiT7Ugm90CSYU/edit?tab=t.0" target="_blank" class="link-button">Скины</a>
-    <a href="https://docs.google.com/document/d/1NtxXMPbnQFeX6obx3SW9o32R3F-qA_vnTQ5D-twF3Rc/edit?tab=t.0" target="_blank" class="link-button">Оружие</a>
-    <a href="https://docs.google.com/document/d/1b0grfk0dt3p4EFP_C2xWcX5mUwCMJpuH1bCrHeEk1JU/edit?tab=t.0" target="_blank" class="link-button">Авто</a>
-  </div>
+  <footer>© 2025 Генератор by hostad</footer>
 
   <script src="script.js"></script>
 </body>
